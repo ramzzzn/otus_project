@@ -1,5 +1,6 @@
+import allure
 from selenium.webdriver.common.by import By
-from test_ui.page_objects.base_page import BasePage
+from page_objects.base_page import BasePage
 
 
 class AdminProductsPage(BasePage):
@@ -12,16 +13,19 @@ class AdminProductsPage(BasePage):
     BUTTON_DIALOG_OK = By.CSS_SELECTOR, "button.action-accept"
     SUCCESS_MESSAGE_DELETE = By.XPATH, "//div[text()='A total of 1 record(s) have been deleted.']"
 
+    @allure.step("Открываю страницу добавления нового товара")
     def open_add_product_page(self):
         self.logger.info("Open => Add Product page")
         self.click_action(self.BUTTON_ADD_NEW_PRODUCT)
         self.wait_title("New Product / Products / Inventory / Catalog / Magento Admin")
 
+    @allure.step("Ищу товар {product_name}")
     def search_product(self, product_name: str):
         self.logger.info("Searching product")
         self.input(self.INPUT_SEARCH, product_name)
         self.click_action(self.BUTTON_SEARCH)
 
+    @allure.step("Удаляю товар {product_name}")
     def delete_product(self, product_name: str):
         self.logger.info("Deleting product")
         self.click_action(

@@ -1,6 +1,7 @@
+import allure
 from selenium.webdriver.common.by import By
 from selenium.webdriver import ActionChains
-from test_ui.page_objects.base_page import BasePage
+from page_objects.base_page import BasePage
 
 
 class WishListPage(BasePage):
@@ -10,12 +11,14 @@ class WishListPage(BasePage):
     def _product_name_xpath(self, product_name: str):
         return f"//a[normalize-space()='{product_name}']"
 
+    @allure.step("Проверяю наличие товара {product_name} в Избранном")
     def search_product_in_wish_list(self, product_name: str):
         self.logger.info("Searching product in Wish List")
         ActionChains(self.browser).move_to_element(self.search_element(locator=(By.XPATH, self.WISH_LIST[1] +
                                                                                 self._product_name_xpath(product_name)))
                                                    ).perform()
 
+    @allure.step("Удаляю товар {product_name} из Избранного")
     def remove_product_from_wish_list(self, product_name: str):
         self.logger.info("Removing product from Wish List")
         self.click_action(locator=(By.XPATH, self._product_name_xpath(product_name) +

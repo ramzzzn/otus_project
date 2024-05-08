@@ -1,5 +1,6 @@
+import allure
 from selenium.webdriver.common.by import By
-from test_ui.page_objects.base_page import BasePage
+from page_objects.base_page import BasePage
 
 
 class AddAddressPage(BasePage):
@@ -12,6 +13,7 @@ class AddAddressPage(BasePage):
     SELECT_COUNTRY = By.CSS_SELECTOR, "select#country"
     BUTTON_SAVE_ADDRESS = By.CSS_SELECTOR, "button[title='Save Address']"
 
+    @allure.step("Добавляю новый адрес получателя")
     def add_new_address(self, first_name: str, last_name: str, phone: str, street_address: str, city: str,
                         postal_code: str, country: str):
         self.logger.info("Adding new address")

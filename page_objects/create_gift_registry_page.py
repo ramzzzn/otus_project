@@ -1,7 +1,8 @@
 import random
 
+import allure
 from selenium.webdriver.common.by import By
-from test_ui.page_objects.base_page import BasePage
+from page_objects.base_page import BasePage
 
 
 class CreateGiftRegistryPage(BasePage):
@@ -21,7 +22,6 @@ class CreateGiftRegistryPage(BasePage):
     INPUT_EVENT_DATE = By.CSS_SELECTOR, "input#event_date"
     BUTTON_SAVE = By.CSS_SELECTOR, "button#submit\.save"
 
-
     def _select_date(self):
         year = random.randint(2014, 2034)
         month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -31,6 +31,7 @@ class CreateGiftRegistryPage(BasePage):
         self.select_option_by_text(self.DATEPICKER_SELECT_MONTH, random.choice(month))
         self.click_action(locator=(By.XPATH, f"//table//a[text()={str(day)}]"))
 
+    @allure.step("Создаю реестр подарков для события {event}")
     def create_gift_registry(self, event: str, message: str, is_public: str, is_active: str, country: str,
                              first_name: str, last_name: str, email: str):
         self.logger.info("Creating Gift Registry")

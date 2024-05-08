@@ -1,7 +1,8 @@
+import allure
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 
-from test_ui.page_objects.base_page import BasePage
+from page_objects.base_page import BasePage
 
 
 class MainPage(BasePage):
@@ -13,6 +14,7 @@ class MainPage(BasePage):
     BANNER_PROMO_ECO = By.CSS_SELECTOR, "a.block-promo.home-eco"
     BUTTON_ADD_TO_CART = By.XPATH, "//button[@title='Add to Cart']"
 
+    @allure.step("Открываю главную страницу")
     def open_main_page(self):
         self.logger.info("Open => Main page")
         self.open_page(page='')
@@ -34,6 +36,7 @@ class MainPage(BasePage):
             locator=(By.XPATH, self._select_product_attribute(product_name=product_name, attribute='color',
                                                               attribute_value=color)))
 
+    @allure.step("Добавляю товар {product_name}, с размером {size} и цветом {color} в корзину")
     def add_to_cart_product(self, product_name: str, size: str, color: str):
         self.logger.info("Adding product to cart")
         ActionChains(self.browser).move_to_element(self.search_element(
@@ -42,8 +45,9 @@ class MainPage(BasePage):
             self._select_product_size(product_name, size)
             self._select_product_color(product_name, color)
         self.click_action(locator=(By.XPATH, self._select_product_card(product_name=product_name) +
-                                   self.BUTTON_ADD_TO_CART[1]), timeout=1)
+                                   self.BUTTON_ADD_TO_CART[1]), sleep=2)
 
+    @allure.step("Открываю страницу товара {product_name}")
     def open_product_page(self, product_name: str):
         self.logger.info("Open => Product page")
         self.click_action(locator=(By.XPATH, self._select_product_card(product_name=product_name)))

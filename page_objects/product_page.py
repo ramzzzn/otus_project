@@ -1,7 +1,8 @@
 import random
 
+import allure
 from selenium.webdriver.common.by import By
-from test_ui.page_objects.base_page import BasePage
+from page_objects.base_page import BasePage
 
 
 class ProductPage(BasePage):
@@ -24,6 +25,7 @@ class ProductPage(BasePage):
     def _select_product_color(self, color: str):
         self.click_action(locator=(By.XPATH, self._select_product_attribute(attribute='color', attribute_value=color)))
 
+    @allure.step("Добавляю товар с размером {size} и цветом {color} в корзину")
     def add_to_cart_product(self, size: str, color: str):
         self.logger.info("Adding product to cart")
         if size and color:
@@ -31,6 +33,7 @@ class ProductPage(BasePage):
             self._select_product_color(color)
         self.click_action(self.BUTTON_ADD_TO_CART)
 
+    @allure.step("Добавляю товар в Избранное")
     def add_to_wish_list(self):
         self.logger.info("Adding product to wish list")
         self.click_action(self.BUTTON_ADD_TO_WISH_LIST)
@@ -38,14 +41,15 @@ class ProductPage(BasePage):
 
     def _rate_product(self):
         self.click_action(locator=(By.CSS_SELECTOR, self.RATING_ELEMENT[1] +
-                                   f" > label#Rating_{str(random.randint(1, 5))}_label"), timeout=1)
+                                   f" > label#Rating_{str(random.randint(1, 5))}_label"))
 
+    @allure.step("Добавляю отзыв к товару")
     def review_product(self, nickname: str, summary: str, review: str):
         self.logger.info("Review product")
         self.click_action(self.TAB_REVIEW)
-        self._rate_product()
         self.input(self.INPUT_NICKNAME, nickname)
         self.input(self.INPUT_SUMMARY, summary)
         self.input(self.INPUT_REVIEW, review)
-        self.click_action(self.BUTTON_SUBMIT_REVIEW, timeout=1)
+        self._rate_product()
+        self.click_action(self.BUTTON_SUBMIT_REVIEW)
         self.search_element(self.SUCCESS_MESSAGE)

@@ -1,3 +1,4 @@
+import allure
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -6,7 +7,7 @@ from selenium.webdriver import ActionChains
 
 
 class BasePage:
-    def __init__(self, browser, timeout=6):
+    def __init__(self, browser, timeout=5):
         self.browser = browser
         self.wait = WebDriverWait(browser, timeout)
         self.logger = browser.logger
@@ -41,7 +42,11 @@ class BasePage:
         try:
             return self.wait.until(EC.visibility_of_element_located(locator))
         except TimeoutException:
-            # self.driver.save_screenshot("{}.png".format(self.driver.session_id))
+            allure.attach(
+                body=self.browser.get_screenshot_as_png(),
+                name="screenshot_image",
+                attachment_type=allure.attachment_type.PNG
+            )
             error_message = f"Element was not found by the specified selector: {locator}"
             self.logger.exception("%s: %s" % (self.class_name, error_message))
             raise TimeoutException(error_message)
@@ -51,20 +56,38 @@ class BasePage:
         try:
             return self.wait.until(EC.visibility_of_all_elements_located(locator))
         except TimeoutException:
+            allure.attach(
+                body=self.browser.get_screenshot_as_png(),
+                name="screenshot_image",
+                attachment_type=allure.attachment_type.PNG
+            )
             error_message = f"No element was found for the specified selector: {locator}"
             self.logger.exception("%s: %s" % (self.class_name, error_message))
             raise TimeoutException(error_message)
 
-    def click_action(self, locator: tuple, timeout=0.5):
+    def search_clickable_element(self, locator: tuple):
+        try:
+            return self.wait.until(EC.element_to_be_clickable(locator))
+        except TimeoutException:
+            allure.attach(
+                body=self.browser.get_screenshot_as_png(),
+                name="screenshot_image",
+                attachment_type=allure.attachment_type.PNG
+            )
+            error_message = f"Element was not found by the specified selector: {locator}"
+            self.logger.exception("%s: %s" % (self.class_name, error_message))
+            raise TimeoutException(error_message)
+
+    def click_action(self, locator: tuple, sleep=2):
         self.logger.debug("%s: Clicking element %s" % (self.class_name, locator))
         ActionChains(self.browser) \
-            .pause(timeout).move_to_element(self.search_element(locator)) \
-            .pause(timeout).click() \
+            .pause(sleep).move_to_element(self.search_clickable_element(locator)) \
+            .pause(sleep).click() \
             .perform()
 
-    def input(self, locator: tuple, text: str, timeout: int = 0):
+    def input(self, locator: tuple, text: str, timeout: int = 0.5):
         self.logger.debug("%s: Input %s in element %s" % (self.class_name, text, locator))
-        ActionChains(self.browser).pause(timeout).move_to_element(self.search_element(locator)).click().perform()
+        ActionChains(self.browser).pause(timeout).move_to_element(self.search_clickable_element(locator)).click().perform()
         self.search_element(locator).clear()
         for letter in text:
             self.search_element(locator).send_keys(letter)

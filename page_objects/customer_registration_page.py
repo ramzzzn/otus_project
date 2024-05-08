@@ -1,5 +1,6 @@
+import allure
 from selenium.webdriver.common.by import By
-from test_ui.page_objects.base_page import BasePage
+from page_objects.base_page import BasePage
 
 
 class CustomerRegistrationPage(BasePage):
@@ -10,6 +11,7 @@ class CustomerRegistrationPage(BasePage):
     INPUT_CONFIRM_PASSWORD = By.CSS_SELECTOR, "input#password-confirmation"
     BUTTON_CREATE_ACCOUNT = By.CSS_SELECTOR, "button[title='Create an Account']"
 
+    @allure.step("Регистрирую нового пользователя")
     def register_customer(self, first_name: str, last_name: str, email: str, password: str):
         self.logger.info("Registering a new customer")
         self.input(self.INPUT_FIRST_NAME, first_name)

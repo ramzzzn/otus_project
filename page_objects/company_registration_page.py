@@ -1,5 +1,6 @@
+import allure
 from selenium.webdriver.common.by import By
-from test_ui.page_objects.base_page import BasePage
+from page_objects.base_page import BasePage
 
 
 class CompanyRegistrationPage(BasePage):
@@ -17,6 +18,7 @@ class CompanyRegistrationPage(BasePage):
     BUTTON_SUBMIT = By.CSS_SELECTOR, "button.action.save"
     SUCCESS_MESSAGE = By.CSS_SELECTOR, "div.message-success"
 
+    @allure.step("Регистрирую аккаунт компании {company_name}")
     def register_company(self, company_name: str, company_legal_name: str, email: str, street_address: str, city: str,
                          postal_code: str, phone: str, admin_email: str, admin_first_name: str, admin_last_name: str):
         self.logger.info("Registering a new company")
@@ -31,6 +33,6 @@ class CompanyRegistrationPage(BasePage):
         self.input(self.INPUT_EMAIL, admin_email)
         self.input(self.INPUT_FIRST_NAME, admin_first_name)
         self.input(self.INPUT_LAST_NAME, admin_last_name)
-        self.click_action(self.BUTTON_SUBMIT, timeout=0.7)
+        self.click_action(self.BUTTON_SUBMIT, sleep=0.7)
         self.wait_title("Create New Company")
         self.search_element(self.SUCCESS_MESSAGE)

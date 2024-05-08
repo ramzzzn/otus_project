@@ -1,5 +1,6 @@
+import allure
 from selenium.webdriver.common.by import By
-from test_ui.page_objects.base_page import BasePage
+from page_objects.base_page import BasePage
 
 
 class AddressBookPage(BasePage):
@@ -9,6 +10,7 @@ class AddressBookPage(BasePage):
     BUTTON_DIALOG_CANCEL = By.CSS_SELECTOR, "button.action-dissmiss"
     SUCCESS_MESSAGE = By.CSS_SELECTOR, "div.message-success"
 
+    @allure.step("Открываю страницу добавления адреса получателя")
     def open_add_address_page(self):
         self.logger.info("Open => Add Address page")
         self.click_action(self.BUTTON_ADD_NEW_ADDRESS)
@@ -17,6 +19,7 @@ class AddressBookPage(BasePage):
     def _get_parameter(self, param_name: str, value: str):
         return self.search_element(locator=(By.XPATH, f"//td[@data-th='{param_name}'][text()='{value}']"))
 
+    @allure.step("Проверяю наличие добавленного адреса {street_address}")
     def check_additional_address(self, first_name: str, last_name: str, phone: str, street_address: str, city: str,
                                  postal_code: str, country: str):
         self.logger.info("Checking address")
@@ -28,6 +31,7 @@ class AddressBookPage(BasePage):
         self._get_parameter("Zip/Postal Code", postal_code)
         self._get_parameter("Phone", phone)
 
+    @allure.step("Удаляю адрес {street_address}")
     def delete_additional_address(self, street_address: str):
         self.logger.info("Deleting address")
         self.click_action(locator=(By.XPATH, self.text_xpath(street_address) + "/ancestor::tr" +

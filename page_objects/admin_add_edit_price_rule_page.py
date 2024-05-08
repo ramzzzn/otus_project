@@ -1,5 +1,6 @@
+import allure
 from selenium.webdriver.common.by import By
-from test_ui.page_objects.base_page import BasePage
+from page_objects.base_page import BasePage
 
 
 class AdminAddEditPriceRulePage(BasePage):
@@ -20,6 +21,7 @@ class AdminAddEditPriceRulePage(BasePage):
         self.click_action(locator=(By.XPATH, self.text_xpath(customer_group) + "/ancestor::div/input"))
         self.click_action(self.SELECT_CUSTOMER_GROUPS_BUTTON_DONE)
 
+    @allure.step("Добавляю правило цены {rule_name}")
     def add_new_rule(self, rule_name: str, customer_group: str, discount: str):
         self.logger.info("Adding new rule")
         self.input(self.INPUT_RULE_NAME, rule_name)
@@ -27,14 +29,15 @@ class AdminAddEditPriceRulePage(BasePage):
         self.select_option_by_value(self.SELECT_WEBSITES, '1')
         self._select_customer_group(customer_group)
         self.click_action(self.COLLAPSIBLE_TITLE_ACTIONS)
-        self.input(self.INPUT_DISCOUNT_AMOUNT, discount, timeout=1) # ждем, пока пройдет анимация раскрытия элемента
+        self.input(self.INPUT_DISCOUNT_AMOUNT, discount)
         self.click_action(self.BUTTON_SAVE)
         self.wait_title("Catalog Price Rule / Promotions / Marketing / Magento Admin")
         self.search_element(locator=(By.XPATH, self.contains_text_xpath("You saved the rule.")))
 
+    @allure.step("Удаляю правило для цены")
     def delete_rule(self):
         self.logger.info("Deleting rule")
         self.click_action(self.BUTTON_DELETE)
-        self.click_action(self.BUTTON_DIALOG_OK)
+        self.click_action(self.BUTTON_DIALOG_OK, sleep=0.8)
         self.wait_title("Catalog Price Rule / Promotions / Marketing / Magento Admin")
         self.search_element(self.SUCCESS_MESSAGE_DELETE)

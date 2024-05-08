@@ -1,5 +1,6 @@
+import allure
 from selenium.webdriver.common.by import By
-from test_ui.page_objects.base_page import BasePage
+from page_objects.base_page import BasePage
 
 
 class AdminAddProductPage(BasePage):
@@ -10,6 +11,7 @@ class AdminAddProductPage(BasePage):
     SUCCESS_MESSAGE_ADD = By.XPATH, "//div[text()='You saved the product.']"
     BUTTON_BACK = By.CSS_SELECTOR, "button#back"
 
+    @allure.step("Добавляю новый товар {product_name}")
     def add_new_product(self, product_name: str, sku: str, price: str):
         self.logger.info("Adding new product")
         self.input(self.INPUT_PRODUCT_NAME, product_name)
@@ -18,6 +20,7 @@ class AdminAddProductPage(BasePage):
         self.click_action(self.BUTTON_SAVE)
         self.search_element(self.SUCCESS_MESSAGE_ADD)
 
+    @allure.step("Переход назад на страницу товаров")
     def back_to_products_page(self):
         self.logger.info("Back to Products Page")
         self.click_action(self.BUTTON_BACK)
