@@ -45,7 +45,7 @@ class MainPage(BasePage):
             self._select_product_size(product_name, size)
             self._select_product_color(product_name, color)
         self.click_action(locator=(By.XPATH, self._select_product_card(product_name=product_name) +
-                                   self.BUTTON_ADD_TO_CART[1]), sleep=2)
+                                   self.BUTTON_ADD_TO_CART[1]), sleep=3)
 
     @allure.step("Открываю страницу товара {product_name}")
     def open_product_page(self, product_name: str):

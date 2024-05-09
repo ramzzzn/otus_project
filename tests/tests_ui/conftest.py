@@ -29,8 +29,11 @@ def pytest_addoption(parser):
 
 def setup_logger(name: str, log_level: str) -> logging.Logger:
     # создаем папку logs, если её нет
-    if not os.path.exists("logs"):
-        os.makedirs("logs")
+    try:
+        if not os.path.exists("logs"):
+            os.makedirs("logs")
+    except FileExistsError:
+        pass
     logger = logging.getLogger(name)
     # задаем путь, где будут храниться логи
     file_handler = logging.FileHandler(f"logs/{name}.log")
@@ -73,6 +76,7 @@ def remote_execute(executor, browser_name, version, vnc, video):
     # настраиваем веб-драйвер, согласно выбранному браузеру:
     if browser_name == "chrome":
         options = ChromiumOptions()
+        # при удаленном запуске тесты запускаются в режиме инкогнито, т.к при обычном режиме возникают ошибки
         options.add_argument("--incognito")
     elif browser_name == "firefox":
         options = FirefoxOptions()

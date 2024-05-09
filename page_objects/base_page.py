@@ -78,16 +78,16 @@ class BasePage:
             self.logger.exception("%s: %s" % (self.class_name, error_message))
             raise TimeoutException(error_message)
 
-    def click_action(self, locator: tuple, sleep=2):
+    def click_action(self, locator: tuple, sleep=1):
         self.logger.debug("%s: Clicking element %s" % (self.class_name, locator))
         ActionChains(self.browser) \
             .pause(sleep).move_to_element(self.search_clickable_element(locator)) \
             .pause(sleep).click() \
             .perform()
 
-    def input(self, locator: tuple, text: str, timeout: int = 0.5):
+    def input(self, locator: tuple, text: str, sleep: int = 0.5):
         self.logger.debug("%s: Input %s in element %s" % (self.class_name, text, locator))
-        ActionChains(self.browser).pause(timeout).move_to_element(self.search_clickable_element(locator)).click().perform()
+        ActionChains(self.browser).pause(sleep).move_to_element(self.search_clickable_element(locator)).click().perform()
         self.search_element(locator).clear()
         for letter in text:
             self.search_element(locator).send_keys(letter)

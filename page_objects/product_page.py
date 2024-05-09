@@ -20,7 +20,8 @@ class ProductPage(BasePage):
         return f"//div[@class='swatch-attribute {attribute}']//div[@aria-label='{attribute_value}']"
 
     def _select_product_size(self, size: str):
-        self.click_action(locator=(By.XPATH, self._select_product_attribute(attribute='size', attribute_value=size)))
+        self.click_action(locator=(By.XPATH, self._select_product_attribute(attribute='size', attribute_value=size)),
+                          sleep=5)
 
     def _select_product_color(self, color: str):
         self.click_action(locator=(By.XPATH, self._select_product_attribute(attribute='color', attribute_value=color)))
@@ -31,12 +32,13 @@ class ProductPage(BasePage):
         if size and color:
             self._select_product_size(size)
             self._select_product_color(color)
-        self.click_action(self.BUTTON_ADD_TO_CART)
+        self.click_action(self.BUTTON_ADD_TO_CART, sleep=5)  # при удаленном прогоне элементы прогружаются очень долго
 
     @allure.step("Добавляю товар в Избранное")
     def add_to_wish_list(self):
         self.logger.info("Adding product to wish list")
-        self.click_action(self.BUTTON_ADD_TO_WISH_LIST)
+        self.click_action(self.BUTTON_ADD_TO_WISH_LIST,
+                          sleep=2)  # при удаленном прогоне элементы прогружаются очень долго
         self.wait_title("My Wish List")
 
     def _rate_product(self):
@@ -46,7 +48,7 @@ class ProductPage(BasePage):
     @allure.step("Добавляю отзыв к товару")
     def review_product(self, nickname: str, summary: str, review: str):
         self.logger.info("Review product")
-        self.click_action(self.TAB_REVIEW)
+        self.click_action(self.TAB_REVIEW, sleep=3)
         self.input(self.INPUT_NICKNAME, nickname)
         self.input(self.INPUT_SUMMARY, summary)
         self.input(self.INPUT_REVIEW, review)

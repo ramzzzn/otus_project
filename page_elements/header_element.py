@@ -26,18 +26,18 @@ class HeaderElement:
         return self.header_panel.find_element(*self.SIGN_IN_LINK)
 
     @property
-    def create_account_menu(self):
+    def menu_create_account(self):
         return self.header_panel.find_element(*self.CREATE_ACCOUNT_MENU)
 
     @property
     def customer_menu(self):
         return self.header_panel.find_element(*self.CUSTOMER_MENU)
 
-    def _click_header_element(self, element):
-        ActionChains(self.browser).move_to_element(element).click().perform()
+    def _click_header_element(self, element, sleep=3):
+        ActionChains(self.browser).pause(sleep).move_to_element(element).pause(sleep).click().perform()
 
     def _open_create_account_menu(self, locator: tuple):
-        self._click_header_element(self.create_account_menu)
+        self._click_header_element(self.menu_create_account)
         try:
             self.wait.until(EC.visibility_of_element_located(locator)).click()
         except TimeoutException:
