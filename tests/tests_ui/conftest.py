@@ -40,7 +40,7 @@ def setup_logger(name: str, log_level: str) -> logging.Logger:
     # задаем формат логов
     file_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
     logger.addHandler(file_handler)
-    logger.setLevel(level=log_level)
+    logger.setLevel(level="INFO")
     return logger
 
 
