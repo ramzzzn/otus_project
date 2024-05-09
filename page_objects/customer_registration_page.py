@@ -12,7 +12,7 @@ class CustomerRegistrationPage(BasePage):
     BUTTON_CREATE_ACCOUNT = By.CSS_SELECTOR, "button[title='Create an Account']"
 
     @allure.step("Регистрирую нового пользователя")
-    def register_customer(self, first_name: str, last_name: str, email: str, password: str):
+    def register_customer(self, email: str, password: str, first_name: str, last_name: str):
         self.logger.info("Registering a new customer")
         self.input(self.INPUT_FIRST_NAME, first_name)
         self.input(self.INPUT_LAST_NAME, last_name)

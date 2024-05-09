@@ -5,7 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 class AlertElement:
     ALERT_SUCCESS = By.CSS_SELECTOR, "div.message-success"
-    ALERT_SUCCESS_CART_LINK = By.XPATH, "//a[text()='shopping cart']"
+    ALERT_SUCCESS_CART_LINK = By.XPATH, "//div/a[text()='shopping cart']"
 
     def __init__(self, browser):
         self.browser = browser

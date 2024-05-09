@@ -13,6 +13,7 @@ class MainPage(BasePage):
     BANNER_PROMO_PERFORMANCE = By.CSS_SELECTOR, "a.block-promo.home-performance"
     BANNER_PROMO_ECO = By.CSS_SELECTOR, "a.block-promo.home-eco"
     BUTTON_ADD_TO_CART = By.XPATH, "//button[@title='Add to Cart']"
+    ALERT_SUCCESS = By.CSS_SELECTOR, "div.message-success"
 
     @allure.step("Открываю главную страницу")
     def open_main_page(self):
@@ -46,6 +47,7 @@ class MainPage(BasePage):
             self._select_product_color(product_name, color)
         self.click_action(locator=(By.XPATH, self._select_product_card(product_name=product_name) +
                                    self.BUTTON_ADD_TO_CART[1]), sleep=3)
+        self.search_element(self.ALERT_SUCCESS)
 
     @allure.step("Открываю страницу товара {product_name}")
     def open_product_page(self, product_name: str):

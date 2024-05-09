@@ -23,5 +23,5 @@ class AdminAddProductPage(BasePage):
     @allure.step("Переход назад на страницу товаров")
     def back_to_products_page(self):
         self.logger.info("Back to Products Page")
-        self.click_action(self.BUTTON_BACK)
+        self.click_action(self.BUTTON_BACK, sleep=2)
         self.wait_title("Products / Inventory / Catalog / Magento Admin")

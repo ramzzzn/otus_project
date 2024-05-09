@@ -7,7 +7,7 @@ from selenium.webdriver import ActionChains
 
 
 class BasePage:
-    def __init__(self, browser, timeout=5):
+    def __init__(self, browser, timeout=7):
         self.browser = browser
         self.wait = WebDriverWait(browser, timeout)
         self.logger = browser.logger
@@ -33,6 +33,11 @@ class BasePage:
         try:
             self.wait.until(EC.title_is(title))
         except TimeoutException:
+            allure.attach(
+                body=self.browser.get_screenshot_as_png(),
+                name="screenshot_image",
+                attachment_type=allure.attachment_type.PNG
+            )
             error_message = f"Expected title: '{title}', but was '{self.browser.title}'"
             self.logger.exception("%s: %s" % (self.class_name, error_message))
             raise TimeoutException(error_message)

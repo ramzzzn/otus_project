@@ -13,7 +13,8 @@ class AdminAddEditPriceRulePage(BasePage):
     COLLAPSIBLE_TITLE_ACTIONS = By.XPATH, "//span[text()='Actions']"
     INPUT_DISCOUNT_AMOUNT = By.CSS_SELECTOR, "input[name='discount_amount']"
     BUTTON_DELETE = By.CSS_SELECTOR, "button#delete"
-    BUTTON_DIALOG_OK = By.CSS_SELECTOR, "button.action-accept"
+    DIALOG_DELETE_MESSAGE = By.XPATH, "//div[text()='Are you sure you want to do this?']"
+    BUTTON_DIALOG_DELETE_OK = By.CSS_SELECTOR, "button.action-accept"
     SUCCESS_MESSAGE_DELETE = By.XPATH, "//div[text()='You deleted the rule.']"
 
     def _select_customer_group(self, customer_group: str):
@@ -38,6 +39,7 @@ class AdminAddEditPriceRulePage(BasePage):
     def delete_rule(self):
         self.logger.info("Deleting rule")
         self.click_action(self.BUTTON_DELETE)
-        self.click_action(self.BUTTON_DIALOG_OK, sleep=0.8)
+        self.search_element(self.DIALOG_DELETE_MESSAGE)
+        self.click_action(self.BUTTON_DIALOG_DELETE_OK, sleep=0.8)
         self.wait_title("Catalog Price Rule / Promotions / Marketing / Magento Admin")
         self.search_element(self.SUCCESS_MESSAGE_DELETE)

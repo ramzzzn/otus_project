@@ -1,3 +1,5 @@
+import allure
+from selenium.common import TimeoutException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -65,6 +67,20 @@ class AdminMenuElement:
     def partners(self):
         return self.admin_menu.find_element(*self.ADMIN_MENU_PARTNERS)
 
+    def wait_title(self, title: str):
+        self.logger.debug("Waiting for title: %s" % title)
+        try:
+            self.wait.until(EC.title_is(title))
+        except TimeoutException:
+            allure.attach(
+                body=self.browser.get_screenshot_as_png(),
+                name="screenshot_image",
+                attachment_type=allure.attachment_type.PNG
+            )
+            error_message = f"Expected title: '{title}', but was '{self.browser.title}'"
+            self.logger.exception("%s" % error_message)
+            raise TimeoutException(error_message)
+
     def click_submenu_item(self, element):
         ActionChains(self.browser).pause(1).move_to_element(self.wait.until(
             EC.visibility_of_element_located(element))).click().perform()
@@ -73,10 +89,10 @@ class AdminMenuElement:
         self.logger.info("Open => Products page")
         self.catalog.click()
         self.click_submenu_item(self.SUBMENU_CATALOG_PRODUCTS)
-        self.wait.until(EC.title_is('Products / Inventory / Catalog / Magento Admin'))
+        self.wait_title('Products / Inventory / Catalog / Magento Admin')
 
     def open_catalog_price_rule_page(self):
         self.logger.info("Open => Catalog Price page")
         self.marketing.click()
         self.click_submenu_item(self.SUBMENU_CATALOG_PRICE_RULE)
-        self.wait.until(EC.title_is('Catalog Price Rule / Promotions / Marketing / Magento Admin'))
+        self.wait_title('Catalog Price Rule / Promotions / Marketing / Magento Admin')

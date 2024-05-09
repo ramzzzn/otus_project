@@ -22,6 +22,7 @@ class AdminLoginPage(BasePage):
         self.input(self.INPUT_PASSWORD, password)
         self.click_action(self.BUTTON_SIGN_IN)
         self.wait_title("Dashboard / Magento Admin")
+        self.search_element(locator=(By.CSS_SELECTOR, "div.admin-user"))
         # # закрытие системного сообщения после логина - особенность UI
         # self.click_action(self.BUTTON_CLOSE_MESSAGE)
 

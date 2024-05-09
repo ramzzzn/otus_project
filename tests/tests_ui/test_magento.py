@@ -44,7 +44,9 @@ class TestMagento:
     def demo_user(self):
         return {
             'email': "roni_cost@example.com",
-            'password': "roni_cost3@example.com"
+            'password': "roni_cost3@example.com",
+            'first_name': "Veronica",
+            'last_name': "Costello"
         }
 
     @pytest.fixture(scope="session")
@@ -55,8 +57,9 @@ class TestMagento:
         }
 
     @allure.title("Проверка добавления товара в корзину с главной страницы")
-    @pytest.mark.parametrize("product_name, size, color", [('Radiant Tee', 'M', 'Blue')
-                                                           ])
+    @pytest.mark.parametrize("product_name, size, color", [('Radiant Tee', 'M', 'Blue'),
+                                                           ('LifeLong Fitness IV', None, None)
+                                                           ], ids=['product_w_attributes', 'product_wo_attributes'])
     def test_add_product_to_cart_from_main_page(self, browser, product_name, size, color):
         MainPage(browser).open_main_page()
         MainPage(browser).add_to_cart_product(product_name, size, color)
@@ -86,10 +89,10 @@ class TestMagento:
     @pytest.mark.parametrize("product_name", ['Hero Hoodie', 'Push It Messenger Bag'])
     def test_add_product_to_wish_list(self, browser, product_name, demo_user):
         MainPage(browser).open_main_page()
-        HeaderElement(browser).sign_in.click()
-        UserLoginPage(browser).login_user(**demo_user)
         MainPage(browser).open_product_page(product_name)
         ProductPage(browser).add_to_wish_list()
+        HeaderElement(browser).sign_in.click()
+        UserLoginPage(browser).login_user(**demo_user)
         WishListPage(browser).search_product_in_wish_list(product_name)
         WishListPage(browser).remove_product_from_wish_list(product_name)
         HeaderElement(browser).sign_out()
@@ -108,6 +111,9 @@ class TestMagento:
         HeaderElement(browser).open_customer_reg_page()
         test_user = generate_test_customer()
         CustomerRegistrationPage(browser).register_customer(**test_user)
+        HeaderElement(browser).sign_out()
+        HeaderElement(browser).sign_in.click()
+        UserLoginPage(browser).login_user(**test_user)
         HeaderElement(browser).sign_out()
 
     @allure.title("Проверка регистрации корпоративного аккаунта компании")

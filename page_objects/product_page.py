@@ -7,7 +7,7 @@ from page_objects.base_page import BasePage
 
 class ProductPage(BasePage):
     BUTTON_ADD_TO_CART = By.XPATH, "//button[@title='Add to Cart']"
-    BUTTON_ADD_TO_WISH_LIST = By.CSS_SELECTOR, "div.product-addto-links button[data-action='add-to-wishlist']"
+    BUTTON_ADD_TO_WISH_LIST = By.XPATH, "//div[@class='product-addto-links']/a/span[text()='Add to Wish List']"
     TAB_REVIEW = By.CSS_SELECTOR, "div > a#tab-label-reviews-title"
     INPUT_NICKNAME = By.CSS_SELECTOR, "input#nickname_field"
     INPUT_SUMMARY = By.CSS_SELECTOR, "input#summary_field"
@@ -32,14 +32,15 @@ class ProductPage(BasePage):
         if size and color:
             self._select_product_size(size)
             self._select_product_color(color)
-        self.click_action(self.BUTTON_ADD_TO_CART, sleep=5)  # при удаленном прогоне элементы прогружаются очень долго
+        # при удаленном прогоне некоторые элементы прогружается очень долго
+        self.click_action(self.BUTTON_ADD_TO_CART, sleep=7)
+        self.search_element(self.SUCCESS_MESSAGE)
 
     @allure.step("Добавляю товар в Избранное")
     def add_to_wish_list(self):
         self.logger.info("Adding product to wish list")
-        self.click_action(self.BUTTON_ADD_TO_WISH_LIST,
-                          sleep=2)  # при удаленном прогоне элементы прогружаются очень долго
-        self.wait_title("My Wish List")
+        self.click_action(self.BUTTON_ADD_TO_WISH_LIST)
+        self.wait_title("Customer Login")
 
     def _rate_product(self):
         self.click_action(locator=(By.CSS_SELECTOR, self.RATING_ELEMENT[1] +
@@ -48,7 +49,9 @@ class ProductPage(BasePage):
     @allure.step("Добавляю отзыв к товару")
     def review_product(self, nickname: str, summary: str, review: str):
         self.logger.info("Review product")
-        self.click_action(self.TAB_REVIEW, sleep=3)
+        # при удаленном прогоне некоторые элементы прогружается очень долго
+        self.search_element(self.TAB_REVIEW)
+        self.click_action(self.TAB_REVIEW)
         self.input(self.INPUT_NICKNAME, nickname)
         self.input(self.INPUT_SUMMARY, summary)
         self.input(self.INPUT_REVIEW, review)
