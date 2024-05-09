@@ -41,7 +41,7 @@ class HeaderElement:
         try:
             self.wait.until(EC.visibility_of_element_located(locator)).click()
         except TimeoutException:
-            raise AssertionError(f"Не найден ни один элемент по указанному селектору: {locator}")
+            raise TimeoutException(f"Element was not found by the specified selector: {locator}")
 
     def open_login_page(self):
         self.logger.info("Open => Login page")
