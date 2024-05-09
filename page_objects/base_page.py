@@ -7,7 +7,7 @@ from selenium.webdriver import ActionChains
 
 
 class BasePage:
-    def __init__(self, browser, timeout=7):
+    def __init__(self, browser, timeout=10):
         self.browser = browser
         self.wait = WebDriverWait(browser, timeout)
         self.logger = browser.logger
