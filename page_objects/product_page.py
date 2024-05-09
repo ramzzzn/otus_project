@@ -26,7 +26,7 @@ class ProductPage(BasePage):
     def _select_product_color(self, color: str):
         self.click_action(locator=(By.XPATH, self._select_product_attribute(attribute='color', attribute_value=color)))
 
-    @allure.step("Добавляю товар с размером {size} и цветом {color} в корзину")
+    @allure.step("Добавляю товар в корзину")
     def add_to_cart_product(self, size: str, color: str):
         self.logger.info("Adding product to cart")
         if size and color:
@@ -39,7 +39,7 @@ class ProductPage(BasePage):
     @allure.step("Добавляю товар в Избранное")
     def add_to_wish_list(self):
         self.logger.info("Adding product to wish list")
-        self.click_action(self.BUTTON_ADD_TO_WISH_LIST)
+        self.click_action(self.BUTTON_ADD_TO_WISH_LIST, sleep=3)
         self.wait_title("Customer Login")
 
     def _rate_product(self):
